@@ -1,0 +1,13 @@
+{
+  "name": "ember-gae",
+  "version": "0.0.1",
+  "description": "Google App Engine NDB Models ⇆ Ember-Data",
+  "main": "lib/client.js",
+  "dependencies": {
+    "kelonye/ember-data": "*"
+  },
+  "scripts": [
+    "lib/client.js"
+  ],
+  "license": "MIT"
+}
