@@ -46,9 +46,6 @@ class BaseItemsView(BaseView):
         self.response.out.write(json.dumps(json_data))
 
     def query(self):
-        #query = 'SELECT * FROM %s WHERE __key__=:1' % kind
-        #item = ndb.gql(query, key).get()
-        #value = item.key
         body = self.request.body
         query = json.loads(body)['query']
         if query == 'count':
@@ -57,26 +54,16 @@ class BaseItemsView(BaseView):
             self.response.out.write(count)
             return
         self.response.headers['Content-Type'] = 'application/json'
-        items = self.api.model.query()
-        # filter
-        filta = query.get('filter', None)
-        if filta:
-            items = items.filter(**filta)
-        # # exclude
-        # exclude = query.get('exclude', None)
-        # if exclude:
-        #     items = items.exclude(**exclude)
-        # # order_by
-        # order_by = query.get('order_by', '?')
-        # items = items.order_by(order_by)
-        # # limit
-        # limit = query.get('limit', None)
-        # if limit:
-        #     if len(limit) == 2:
-        #         limit.append(1)
-        #     items = items[limit[0]: limit[1]: limit[2]]
-        items = items.fetch(1000)
-
+        def values():
+            for value in query['values']:
+                if isinstance(value, dict):
+                    kind = value['kind']
+                    id = int(value['value'])
+                    value = ndb.Key(kind, id)
+                yield value
+        items = self.api.model\
+            .gql(query['string'], *[i for i in values()])#\
+            #.fetch(1000)
         def get_items_json():
             for item in items:
                 is_readable = self.api.__is_readable__(self, item)

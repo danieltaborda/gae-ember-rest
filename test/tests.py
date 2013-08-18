@@ -212,21 +212,88 @@ class ApiT(T):
 
 class QueryT(T):
 
-    @unittest.skip('')
-    def test_filter(self):
+    def test_query(self):
+
+        uri = '/posts'
+
         data = {
             'query': {
-                'filter': {
-                    'user': unicode(self.user1.key.id())
-                }
+                'string': 'WHERE title=:1',
+                'values': [
+                    'a'
+                ]
             }
         }
-        uri = '/posts'
         res = self.app.post_json(uri, data)
         data = res.json
-        logger.info(data)
-        # # assert returns 2/3 matched posts
-        # self.assertEqual(len(data['posts']), 2)
+        # assert returns 1/3 matched posts
+        self.assertEqual(len(data['posts']), 1)
+
+        data = {
+            'query': {
+                'string': 'WHERE user=:1',
+                'values': [
+                    {
+                        'kind': 'User',
+                        'value': unicode(self.user1.key.id())
+                    }
+                ]
+            }
+        }
+        res = self.app.post_json(uri, data)
+        data = res.json
+        # assert returns 2/3 matched posts
+        self.assertEqual(len(data['posts']), 2)
+
+        data = {
+            'query': {
+                'string': 'WHERE user=:1 LIMIT 1',
+                'values': [
+                    {
+                        'kind': 'User',
+                        'value': unicode(self.user1.key.id())
+                    }
+                ]
+            }
+        }
+        res = self.app.post_json(uri, data)
+        data = res.json
+        # assert returns 1/3 matched posts
+        self.assertEqual(len(data['posts']), 1)
+
+        data = {
+            'query': {
+                'string': 'WHERE user=:2 AND title=:1',
+                'values': [
+                    'a',
+                    {
+                        'kind': 'User',
+                        'value': unicode(self.user1.key.id())
+                    }
+                ]
+            }
+        }
+        res = self.app.post_json(uri, data)
+        data = res.json
+        # assert returns 1/3 matched posts
+        self.assertEqual(len(data['posts']), 1)
+
+        data = {
+            'query': {
+                'string': 'WHERE user=:1 AND title=:2',
+                'values': [
+                    {
+                        'kind': 'User',
+                        'value': unicode(self.user1.key.id())
+                    },
+                    'a'
+                ]
+            }
+        }
+        res = self.app.post_json(uri, data)
+        data = res.json
+        # assert returns 1/3 matched posts
+        self.assertEqual(len(data['posts']), 1)
 
     def test_count(self):
         data = {
