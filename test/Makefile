@@ -5,6 +5,6 @@ test: lib
 	@nosetests -q --with-gae -l test.lib,test.tests
 
 lib:
-	@ln -fs $(PWD)/../$@ $@
+	@ln -fs $(PWD)/$@ $@
 
 .PHONY: test start
