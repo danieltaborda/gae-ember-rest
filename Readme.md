@@ -1,8 +1,8 @@
-<!-- Install
+Install
 ---
 
-    $ pip install kelonye/ember-gae
-    $ component install kelonye/ember-gae
+    $ pip install gae_ember_rest
+    $ component install kelonye/gae_ember_rest
 
 Example
 ---
@@ -15,4 +15,4 @@ Example
 Test
 ---
 
-    $ make deps test -->
+    $ make deps test
