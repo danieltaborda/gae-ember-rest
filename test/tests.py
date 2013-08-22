@@ -1,8 +1,14 @@
+import os
+import sys
+sys.path.insert(0, '/usr/local/google_appengine')
+import dev_appserver
+dev_appserver.fix_sys_path()
+
 from google.appengine.api import memcache
 from google.appengine.ext import testbed
 from google.appengine.api import users
 from google.appengine.ext import ndb
-from test import app
+from views import app
 from models import *
 import unittest
 import webtest
@@ -309,3 +315,5 @@ class QueryT(T):
         uri = '/tags'
         res = self.app.post_json(uri, data)
         self.assertEqual(Comment.query().count(100), int(res.body))
+
+unittest.main()

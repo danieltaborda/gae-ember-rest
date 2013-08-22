@@ -1,8 +1,8 @@
 Install
 ---
 
-    $ pip install gae_ember_rest
-    $ component install kelonye/gae_ember_rest
+    $ pip install gae-ember-rest
+    $ component install kelonye/gae-ember-rest
 
 Example
 ---

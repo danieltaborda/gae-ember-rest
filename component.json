@@ -1,5 +1,5 @@
 {
-  "name": "ember-gae",
+  "name": "gae-ember-rest",
   "version": "0.0.1",
   "main": "lib/client.js",
   "dependencies": {

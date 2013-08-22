@@ -3,12 +3,12 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='gae_ember_rest',
+    name='gae-ember-rest',
     version='0.0.1',
     description='Google App Engine NDB <> Ember Data',
     author='Mitchel Kelonye',
     author_email='kelonyemitchel@gmail.com',
-    url='https://github.com/kelonye/ember-gae',
+    url='https://github.com/kelonye/gae-ember-rest',
     packages=['gae_ember_rest',],
     package_dir = {'gae_ember_rest': 'lib'},
     license='MIT License',

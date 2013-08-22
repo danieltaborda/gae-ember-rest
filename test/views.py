@@ -1,6 +1,7 @@
 import os
 import webapp2 as webapp
 from google.appengine.ext.webapp import template
+import apis
 
 
 class IndexView(webapp.RequestHandler):
@@ -13,6 +14,8 @@ class IndexView(webapp.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
 
-urls = [
+urls = apis.urls + [
     ('/', IndexView),
 ]
+
+app = webapp.WSGIApplication(urls, debug=True)
