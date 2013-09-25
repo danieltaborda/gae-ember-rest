@@ -182,8 +182,8 @@ class Api(Utils):
         class ItemView(BaseItemView):
             api = self
         return [
-            ( '/' + self.plural_name, ItemsView),
-            ( '/' + self.plural_name + '/(\w+)', ItemView),
+            ( '/' + self.plural_name + '/', ItemsView),
+            ( '/' + self.plural_name + '/(\w+)/', ItemView),
         ]
 
     def item_to_JSON(self, item):

@@ -99,7 +99,7 @@ class PersmissionT(T):
             USER_IS_ADMIN = '-1',
             overwrite = True
         )
-        uri = '/posts'
+        uri = '/posts/'
         data = {'post': {
             'title': 'New Book',
             'content': ' ',
@@ -125,7 +125,7 @@ class FieldT(T):
 
     def test_key(self):
         post = self.post1
-        uri = '/posts/%s' % post.key.id()
+        uri = '/posts/%s/' % post.key.id()
         res = self.app.get(uri)
         self.assertEqual(res.headers['Content-Type'], 'application/json')
         data = res.json
@@ -150,7 +150,7 @@ class ApiT(T):
         )
 
     def test_get_all(self):
-        uri = '/posts'
+        uri = '/posts/'
         res = self.app.get(uri)
         self.assertEqual(res.headers['Content-Type'], 'application/json')
         data = res.json
@@ -164,7 +164,7 @@ class ApiT(T):
             'content': 'My New Book',
             'user_id': unicode(self.user1.key.id())
         }}
-        uri = '/posts'
+        uri = '/posts/'
         res = self.app.post_json(uri, data)
         self.assertEqual(res.headers['Content-Type'], 'application/json')
         data = res.json
@@ -176,7 +176,7 @@ class ApiT(T):
 
     def test_get_one(self):
         post = self.post1
-        uri = '/posts/%d' % post.key.id()
+        uri = '/posts/%d/' % post.key.id()
         res = self.app.get(uri)
         self.assertEqual(res.headers['Content-Type'], 'application/json')
         data = res.json
@@ -190,7 +190,7 @@ class ApiT(T):
 
     def test_update(self):
         post = self.post1
-        uri = '/posts/%d' % post.key.id()
+        uri = '/posts/%d/' % post.key.id()
         data = {'post': {
             'title': 'New Book',
             'content': 'My New Book',
@@ -207,7 +207,7 @@ class ApiT(T):
 
     def test_remove(self):
         post = self.post1
-        uri = '/posts/%d' % post.key.id()
+        uri = '/posts/%d/' % post.key.id()
         res = self.app.delete(uri)
         # assert relations are deleted
         for key in [post.key, post.user]:
@@ -220,7 +220,7 @@ class QueryT(T):
 
     def test_query(self):
 
-        uri = '/posts'
+        uri = '/posts/'
 
         data = {
             'query': {
@@ -305,14 +305,14 @@ class QueryT(T):
         data = {
             'query': 'count'
         }
-        uri = '/posts'
+        uri = '/posts/'
         res = self.app.post_json(uri, data)
         self.assertEqual(Post.query().count(100), int(res.body))
 
         data = {
             'query': 'count'
         }
-        uri = '/tags'
+        uri = '/tags/'
         res = self.app.post_json(uri, data)
         self.assertEqual(Comment.query().count(100), int(res.body))
 
