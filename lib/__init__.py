@@ -57,11 +57,14 @@ class BaseItemsView(BaseView):
         self.api.update_item(self, item)
         try:
             self.api.__is_creatable__(self, item)
+            item.put()
         except HTTPError as e:
             self.response.set_status(e.status, e.error)
             self.response.clear()
+        except Exception as e:
+            self.response.set_status(422, e.message)
+            self.response.clear()  
         else:
-            item.put()
             json_data = {}
             json_data[self.api.name] = self.api.item_to_JSON(item)
             self.response.out.write(json.dumps(json_data))
@@ -110,6 +113,9 @@ class BaseItemView(BaseView):
         except HTTPError as e:
             self.response.set_status(e.status, e.error)
             self.response.clear()
+        except Exception as e:
+            self.response.set_status(422, e.message)
+            self.response.clear()
         else:
             json_data = {}
             json_data[self.api.name] = self.api.item_to_JSON(item)
@@ -123,6 +129,9 @@ class BaseItemView(BaseView):
             self.api.__is_updatable__(self, item)
         except HTTPError as e:
             self.response.set_status(e.status, e.error)
+            self.response.clear()
+        except Exception as e:
+            self.response.set_status(422, e.message)
             self.response.clear()
         else:
             item.put()
@@ -138,6 +147,9 @@ class BaseItemView(BaseView):
         except HTTPError as e:
             self.response.set_status(e.status, e.error)
             self.response.clear()
+        except Exception as e:
+            self.response.set_status(422, e.message)
+            self.response.clear()
         else:
             item.key.delete()
             for label, prop in self.api.model._properties.iteritems():
@@ -145,7 +157,6 @@ class BaseItemView(BaseView):
                     key = getattr(item, label)
                     if key:
                         key.delete()
-
             return
 
 

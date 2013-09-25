@@ -48,3 +48,12 @@ class Comment(Model):
     user = ndb.KeyProperty(
         kind=User
     )
+
+
+class Error(Model):
+    content = ndb.TextProperty(
+    )
+    def _pre_put_hook(self):
+        e = 'some error'
+        raise Exception(e)
+

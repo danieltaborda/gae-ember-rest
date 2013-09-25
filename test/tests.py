@@ -316,4 +316,16 @@ class QueryT(T):
         res = self.app.post_json(uri, data)
         self.assertEqual(Comment.query().count(100), int(res.body))
 
+
+class OnErrorsT(T):
+
+    def test_return_with_422(self):
+
+        uri = '/errors/'
+        data = {'error': {
+        }}
+        res = self.app.post_json(uri, data, expect_errors=True)
+        self.assertEqual(res.status_int, 422)
+
+
 unittest.main()
