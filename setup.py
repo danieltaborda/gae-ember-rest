@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='gae-ember-rest',
-    version='0.0.1',
+    version='0.0.2',
     description='Google App Engine NDB <> Ember Data',
     author='Mitchel Kelonye',
     author_email='kelonyemitchel@gmail.com',

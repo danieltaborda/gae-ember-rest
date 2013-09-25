@@ -1,6 +1,6 @@
 {
   "name": "gae-ember-rest",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "lib/client.js",
   "dependencies": {
     "kelonye/ember-data": "*"
