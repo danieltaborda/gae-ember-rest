@@ -7,4 +7,6 @@ test: lib
 lib:
 	@ln -fs $(PWD)/$@ $@
 
+clean:
+
 .PHONY: test start
