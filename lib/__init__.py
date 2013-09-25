@@ -11,15 +11,13 @@ logger = logging.getLogger(__name__)
 
 class HTTPError(Exception):
 
-    def __init__(self, status=422, error=''):
+    def __init__(self, status=422, message=''):
         self.status = status
-        if isinstance(error, dict):
-            error = json.dumps(error)
-        self.error = error
-        self.message = '%s: %s' % (self.status, self.error)
-
-    def __str__(self):
-        return repr(self.message)
+        if isinstance(message, dict):
+            message = json.dumps(message)
+        self.message = message
+    # def __str__(self):
+    #     return repr(self.message)
 
 
 class BaseView(webapp.RequestHandler):
@@ -59,11 +57,11 @@ class BaseItemsView(BaseView):
             self.api.__is_creatable__(self, item)
             item.put()
         except HTTPError as e:
-            self.response.set_status(e.status, e.error)
-            self.response.clear()
+            self.response.out.write(e.message)
+            self.response.set_status(e.status)
         except Exception as e:
-            self.response.set_status(422, e.message)
-            self.response.clear()  
+            self.response.out.write(e.message)
+            self.response.set_status(e.status) 
         else:
             json_data = {}
             json_data[self.api.name] = self.api.item_to_JSON(item)
@@ -111,11 +109,11 @@ class BaseItemView(BaseView):
         try:
             self.api.__is_readable__(self, item)
         except HTTPError as e:
-            self.response.set_status(e.status, e.error)
-            self.response.clear()
+            self.response.out.write(e.message)
+            self.response.set_status(e.status)
         except Exception as e:
-            self.response.set_status(422, e.message)
-            self.response.clear()
+            self.response.out.write(e.message)
+            self.response.set_status(e.status)
         else:
             json_data = {}
             json_data[self.api.name] = self.api.item_to_JSON(item)
@@ -128,11 +126,11 @@ class BaseItemView(BaseView):
         try:
             self.api.__is_updatable__(self, item)
         except HTTPError as e:
-            self.response.set_status(e.status, e.error)
-            self.response.clear()
+            self.response.out.write(e.message)
+            self.response.set_status(e.status)
         except Exception as e:
-            self.response.set_status(422, e.message)
-            self.response.clear()
+            self.response.out.write(e.message)
+            self.response.set_status(e.status)
         else:
             item.put()
             json_data = {}
@@ -145,11 +143,11 @@ class BaseItemView(BaseView):
         try:
             self.api.__is_removable__(self, item)
         except HTTPError as e:
-            self.response.set_status(e.status, e.error)
-            self.response.clear()
+            self.response.out.write(e.message)
+            self.response.set_status(e.status)
         except Exception as e:
-            self.response.set_status(422, e.message)
-            self.response.clear()
+            self.response.out.write(e.message)
+            self.response.set_status(e.status)
         else:
             item.key.delete()
             for label, prop in self.api.model._properties.iteritems():
