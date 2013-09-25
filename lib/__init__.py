@@ -5,10 +5,26 @@ from google.appengine.ext import ndb
 from google.appengine.api import users
 from google.appengine._internal.django.utils import simplejson as json
 
+
 logger = logging.getLogger(__name__)
+
+
+class HTTPError(Exception):
+
+    def __init__(self, status, error=''):
+        self.status = status
+        if isinstance(error, dict):
+            error = json.dumps(error)
+        self.error = error
+        self.message = '%s: %s' % (self.status, self.error)
+
+    def __str__(self):
+        return repr(self.message)
+
 
 class BaseView(webapp.RequestHandler):
     pass
+
 
 class BaseItemsView(BaseView):
 
@@ -17,8 +33,11 @@ class BaseItemsView(BaseView):
         def get_items_json():
             items = self.api.model.query().fetch(100)
             for item in items:
-                is_readable = self.api.__is_readable__(self, item)
-                if not isinstance(is_readable, int):
+                try:
+                    self.api.__is_readable__(self, item)
+                except HTTPError as e:
+                    pass
+                else:
                     yield self.api.item_to_JSON(item)
         json_data = {}
         json_data[self.api.plural_name] = [
@@ -36,14 +55,16 @@ class BaseItemsView(BaseView):
         self.response.headers['Content-Type'] = 'application/json'
         item = self.api.model()
         self.api.update_item(self, item)
-        is_creatable = self.api.__is_creatable__(self, item)
-        if isinstance(is_creatable, int):
-            self.error(is_creatable)
-            return
-        item.put()
-        json_data = {}
-        json_data[self.api.name] = self.api.item_to_JSON(item)
-        self.response.out.write(json.dumps(json_data))
+        try:
+            self.api.__is_creatable__(self, item)
+        except HTTPError as e:
+            self.response.set_status(e.status, e.error)
+            self.response.clear()
+        else:
+            item.put()
+            json_data = {}
+            json_data[self.api.name] = self.api.item_to_JSON(item)
+            self.response.out.write(json.dumps(json_data))
 
     def query(self):
         body = self.request.body
@@ -66,8 +87,11 @@ class BaseItemsView(BaseView):
             #.fetch(1000)
         def get_items_json():
             for item in items:
-                is_readable = self.api.__is_readable__(self, item)
-                if not isinstance(is_readable, int):
+                try:
+                    self.api.__is_readable__(self, item)
+                except HTTPError as e:
+                    pass
+                else:
                     yield self.api.item_to_JSON(item)
         json_data = {}
         json_data[self.api.plural_name] = [
@@ -75,48 +99,55 @@ class BaseItemsView(BaseView):
         ]
         self.response.out.write(json.dumps(json_data))
 
+
 class BaseItemView(BaseView):
 
     def get(self, id):
         self.response.headers['Content-Type'] = 'application/json'
         item = self.api.model.get_by_id(int(id))
-        is_readable = self.api.__is_readable__(self, item)
-        if isinstance(is_readable, int):
-            self.error(is_readable)
-            return
-        json_data = {}
-        json_data[self.api.name] = self.api.item_to_JSON(item)
-        self.response.out.write(json.dumps(json_data))
+        try:
+            self.api.__is_readable__(self, item)
+        except HTTPError as e:
+            self.response.set_status(e.status, e.error)
+            self.response.clear()
+        else:
+            json_data = {}
+            json_data[self.api.name] = self.api.item_to_JSON(item)
+            self.response.out.write(json.dumps(json_data))
 
     def put(self, id):
         self.response.headers['Content-Type'] = 'application/json'
         item = self.api.model.get_by_id(int(id))
         self.api.update_item(self, item)
-        is_updatable = self.api.__is_updatable__(self, item)
-        if isinstance(is_updatable, int):
-            self.error(is_updatable)
-            return
-        item.put()
-        json_data = {}
-        json_data[self.api.name] = self.api.item_to_JSON(item)
-        self.response.out.write(json.dumps(json_data))
+        try:
+            self.api.__is_updatable__(self, item)
+        except HTTPError as e:
+            self.response.set_status(e.status, e.error)
+            self.response.clear()
+        else:
+            item.put()
+            json_data = {}
+            json_data[self.api.name] = self.api.item_to_JSON(item)
+            self.response.out.write(json.dumps(json_data))
 
     def delete(self, id):
         self.response.headers['Content-Type'] = 'application/json'
         item = self.api.model.get_by_id(int(id))
-        is_removable = self.api.__is_removable__(self, item)
-        if isinstance(is_removable, int):
-            self.error(is_removable)
+        try:
+            self.api.__is_removable__(self, item)
+        except HTTPError as e:
+            self.response.set_status(e.status, e.error)
+            self.response.clear()
+        else:
+            item.key.delete()
+            for label, prop in self.api.model._properties.iteritems():
+                if isinstance(prop, ndb.KeyProperty):
+                    key = getattr(item, label)
+                    if key:
+                        key.delete()
+
             return
-        item.key.delete()
 
-        for label, prop in self.api.model._properties.iteritems():
-            if isinstance(prop, ndb.KeyProperty):
-                key = getattr(item, label)
-                if key:
-                    key.delete()
-
-        return
 
 class Utils:
 
@@ -147,6 +178,7 @@ class Field(Utils):
     @property
     def model(self):
         return self.field._kind
+
 
 class Api(Utils):
     def __init__(self):
@@ -222,6 +254,7 @@ class Api(Utils):
                 value = data.get(field.underscored_name, None)
             if value:
                 setattr(item, field.name, value)
+
 
 class Apis(list):
 

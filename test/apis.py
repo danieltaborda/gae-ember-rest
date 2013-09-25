@@ -55,9 +55,22 @@ class CommentApi(Api):
     __is_updatable__ = allow.owner
     __is_removable__ = allow.superuser
 
+
+class ErrorApi(Api):
+    model = Error
+    fields = (
+        'content',
+    )
+    __is_creatable__ = allow.anyone
+    __is_readable__ = allow.anyone
+    __is_updatable__ = allow.anyone
+    __is_removable__ = allow.anyone
+
+
 urls = Apis(
     TagApi,
     UserApi,
     PostApi,
-    CommentApi
+    CommentApi,
+    ErrorApi
 )

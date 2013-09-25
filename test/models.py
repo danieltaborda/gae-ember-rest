@@ -1,4 +1,5 @@
 from google.appengine.ext import ndb
+from lib import HTTPError
 
 
 class Model(ndb.Model):
@@ -9,9 +10,11 @@ class Model(ndb.Model):
         auto_now_add=True
     )
 
+
 class User(Model):
     email = ndb.UserProperty(
     )
+
 
 class Post(Model):
     title = ndb.StringProperty(
