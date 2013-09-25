@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class HTTPError(Exception):
 
-    def __init__(self, status, error=''):
+    def __init__(self, status=422, error=''):
         self.status = status
         if isinstance(error, dict):
             error = json.dumps(error)
