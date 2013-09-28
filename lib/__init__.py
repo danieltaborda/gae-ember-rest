@@ -60,8 +60,9 @@ class BaseItemsView(BaseView):
             self.response.out.write(e.message)
             self.response.set_status(e.status)
         except Exception as e:
+            status = getattr(e, status, 500)
             self.response.out.write(e.message)
-            self.response.set_status(e.status) 
+            self.response.set_status(status)
         else:
             json_data = {}
             json_data[self.api.name] = self.api.item_to_JSON(item)
@@ -112,8 +113,9 @@ class BaseItemView(BaseView):
             self.response.out.write(e.message)
             self.response.set_status(e.status)
         except Exception as e:
+            status = getattr(e, status, 500)
             self.response.out.write(e.message)
-            self.response.set_status(e.status)
+            self.response.set_status(status)
         else:
             json_data = {}
             json_data[self.api.name] = self.api.item_to_JSON(item)
@@ -129,8 +131,9 @@ class BaseItemView(BaseView):
             self.response.out.write(e.message)
             self.response.set_status(e.status)
         except Exception as e:
+            status = getattr(e, status, 500)
             self.response.out.write(e.message)
-            self.response.set_status(e.status)
+            self.response.set_status(status)
         else:
             item.put()
             json_data = {}
@@ -146,8 +149,9 @@ class BaseItemView(BaseView):
             self.response.out.write(e.message)
             self.response.set_status(e.status)
         except Exception as e:
+            status = getattr(e, status, 500)
             self.response.out.write(e.message)
-            self.response.set_status(e.status)
+            self.response.set_status(status)
         else:
             item.key.delete()
             for label, prop in self.api.model._properties.iteritems():
