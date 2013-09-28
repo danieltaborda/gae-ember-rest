@@ -154,11 +154,12 @@ class BaseItemView(BaseView):
             self.response.set_status(status)
         else:
             item.key.delete()
-            for label, prop in self.api.model._properties.iteritems():
-                if isinstance(prop, ndb.KeyProperty):
-                    key = getattr(item, label)
-                    if key:
-                        key.delete()
+            # TODO:
+            # for label, prop in self.api.model._properties.iteritems():
+            #     if isinstance(prop, ndb.KeyProperty):
+            #         key = getattr(item, label)
+            #         if key:
+            #             key.delete()
             return
 
 

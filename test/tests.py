@@ -205,12 +205,13 @@ class ApiT(T):
         self.assertEqual(post.content, data['post']['content'])
         self.assertEqual(unicode(post.user.id()), data['post']['user_id'])
 
+    @unittest.skip('')
     def test_remove(self):
-        post = self.post1
-        uri = '/posts/%d/' % post.key.id()
+        user = self.user1
+        uri = '/user/%d/' % user.key.id()
         res = self.app.delete(uri)
         # assert relations are deleted
-        for key in [post.key, post.user]:
+        for key in [user.key, user.post]:
             if key.get():
                 e = '%s still exists' % key
                 raise Exception(e)
