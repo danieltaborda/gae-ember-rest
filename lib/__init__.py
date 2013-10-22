@@ -127,6 +127,7 @@ class BaseItemView(BaseView):
         self.api.update_item(self, item)
         try:
             self.api.__is_updatable__(self, item)
+            item.put()
         except HTTPError as e:
             self.response.out.write(e.message)
             self.response.set_status(e.status)
@@ -135,7 +136,6 @@ class BaseItemView(BaseView):
             self.response.out.write(e.message)
             self.response.set_status(status)
         else:
-            item.put()
             json_data = {}
             json_data[self.api.name] = self.api.item_to_JSON(item)
             self.response.out.write(json.dumps(json_data))
@@ -145,14 +145,6 @@ class BaseItemView(BaseView):
         item = self.api.model.get_by_id(int(id))
         try:
             self.api.__is_removable__(self, item)
-        except HTTPError as e:
-            self.response.out.write(e.message)
-            self.response.set_status(e.status)
-        except Exception as e:
-            status = getattr(e, 'status', 500)
-            self.response.out.write(e.message)
-            self.response.set_status(status)
-        else:
 
             # user should delete dependencies themselves
             # del children            
@@ -165,7 +157,17 @@ class BaseItemView(BaseView):
             # )
 
             item.key.delete()
-            
+        except HTTPError as e:
+            self.response.out.write(e.message)
+            self.response.set_status(e.status)
+        except Exception as e:
+            status = getattr(e, 'status', 500)
+            self.response.out.write(e.message)
+            self.response.set_status(status)
+        else:
+            json_data = {}
+            self.response.out.write(json.dumps(json_data))
+
 
 class Utils:
 
