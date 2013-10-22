@@ -52,7 +52,8 @@ class T(unittest.TestCase):
         self.post3 = Post(
             title='c',
             content='c',
-            user=self.user2.key
+            user=self.user2.key,
+            parent=self.user2.key
         )
         self.post3.put()
         self.comment1 = Comment(
@@ -205,17 +206,30 @@ class ApiT(T):
         self.assertEqual(post.content, data['post']['content'])
         self.assertEqual(unicode(post.user.id()), data['post']['user_id'])
 
-    @unittest.skip('')
+    @unittest.skip('unimplemented: appengine query has no relation lookup')
     def test_remove(self):
-        user = self.user1
-        uri = '/user/%d/' % user.key.id()
+        user = self.user2
+        uri = '/users/%d/' % user.key.id()
         res = self.app.delete(uri)
         # assert relations are deleted
-        for key in [user.key, user.post]:
+        for key in [
+            user.key,
+            self.post3.key,
+            self.tag1.key,
+            self.tag2.key,
+            self.comment1.key,
+            self.comment2.key
+        ]:
             if key.get():
-                e = '%s still exists' % key
+                e = '%s still exists' % key.id()
                 raise Exception(e)
-
+        # assert unrelated remian untouched
+        for key in [
+            self.user1.key,
+            self.post1.key,
+            self.post2.key,
+        ]:
+            assert key.get()
 
 class QueryT(T):
 

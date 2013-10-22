@@ -55,5 +55,5 @@ class Error(Model):
     )
     def _pre_put_hook(self):
         e = 'some error'
-        raise Exception(e)
+        raise HTTPError(message=e)
 

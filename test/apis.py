@@ -26,7 +26,7 @@ class UserApi(Api):
     __is_creatable__ = allow.none
     __is_readable__ = allow.anyone
     __is_updatable__ = allow.none
-    __is_removable__ = allow.superuser
+    __is_removable__ = allow.anyone
 
 class PostApi(Api):
     model = Post

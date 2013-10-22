@@ -60,7 +60,7 @@ class BaseItemsView(BaseView):
             self.response.out.write(e.message)
             self.response.set_status(e.status)
         except Exception as e:
-            status = getattr(e, status, 500)
+            status = getattr(e, 'status', 500)
             self.response.out.write(e.message)
             self.response.set_status(status)
         else:
@@ -113,7 +113,7 @@ class BaseItemView(BaseView):
             self.response.out.write(e.message)
             self.response.set_status(e.status)
         except Exception as e:
-            status = getattr(e, status, 500)
+            status = getattr(e, 'status', 500)
             self.response.out.write(e.message)
             self.response.set_status(status)
         else:
@@ -131,7 +131,7 @@ class BaseItemView(BaseView):
             self.response.out.write(e.message)
             self.response.set_status(e.status)
         except Exception as e:
-            status = getattr(e, status, 500)
+            status = getattr(e, 'status', 500)
             self.response.out.write(e.message)
             self.response.set_status(status)
         else:
@@ -149,19 +149,23 @@ class BaseItemView(BaseView):
             self.response.out.write(e.message)
             self.response.set_status(e.status)
         except Exception as e:
-            status = getattr(e, status, 500)
+            status = getattr(e, 'status', 500)
             self.response.out.write(e.message)
             self.response.set_status(status)
         else:
-            item.key.delete()
-            # TODO:
-            # for label, prop in self.api.model._properties.iteritems():
-            #     if isinstance(prop, ndb.KeyProperty):
-            #         key = getattr(item, label)
-            #         if key:
-            #             key.delete()
-            return
 
+            # user should delete dependencies themselves
+            # del children            
+            # ndb.delete_multi(
+            #     ndb.Query(
+            #         ancestor=item.key
+            #     ).iter(
+            #         keys_only = True
+            #     )
+            # )
+
+            item.key.delete()
+            
 
 class Utils:
 
