@@ -1,6 +1,7 @@
 import re
 import logging
 import webapp2 as webapp
+from webapp2_extras import sessions
 from google.appengine.ext import ndb
 from google.appengine.api import users
 from google.appengine._internal.django.utils import simplejson as json
@@ -21,7 +22,17 @@ class HTTPError(Exception):
 
 
 class BaseView(webapp.RequestHandler):
-    pass
+
+    @webapp.cached_property
+    def session(self):
+        return self.session_store.get_session()
+
+    def dispatch(self):
+        self.session_store = sessions.get_store(request=self.request)
+        try:
+            webapp.RequestHandler.dispatch(self)
+        finally:
+            self.session_store.save_sessions(self.response)
 
 
 class BaseItemsView(BaseView):
