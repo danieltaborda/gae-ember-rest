@@ -176,7 +176,9 @@ class BaseItemView(BaseView):
             self.response.out.write(e.message)
             self.response.set_status(status)
         else:
-            pass
+            json_data = {}
+            json_data[self.api.name] = self.api.item_to_JSON(item)
+            self.response.out.write(json.dumps(json_data))
 
 class Utils:
 
