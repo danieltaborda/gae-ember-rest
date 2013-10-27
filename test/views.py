@@ -5,10 +5,12 @@ use_library('django', '1.2')
 os.environ['DJANGO_SETTINGS_MODULE'] = '__init__'
 
 import webapp2 as webapp
+from webapp2_extras import sessions
 from google.appengine.ext.webapp import template
 
 import apis
 
+sessions.default_config['secret_key'] = 'dev'
 
 class IndexView(webapp.RequestHandler):
 

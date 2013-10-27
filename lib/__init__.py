@@ -176,9 +176,7 @@ class BaseItemView(BaseView):
             self.response.out.write(e.message)
             self.response.set_status(status)
         else:
-            json_data = {}
-            self.response.out.write(json.dumps(json_data))
-
+            pass
 
 class Utils:
 
