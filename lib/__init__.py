@@ -34,6 +34,11 @@ class BaseView(webapp.RequestHandler):
         finally:
             self.session_store.save_sessions(self.response)
 
+    def get_request_method(self):
+        if json.loads(self.request.body).get('query', None):
+            return 'GET'
+        return self.request.method
+
 
 class BaseItemsView(BaseView):
 
