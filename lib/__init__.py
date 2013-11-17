@@ -35,7 +35,7 @@ class BaseView(webapp.RequestHandler):
             self.session_store.save_sessions(self.response)
 
     def get_request_method(self):
-        if json.loads(self.request.body).get('query', None):
+        if self.request.method == 'POST' and json.loads(body).get('query', None):
             return 'GET'
         return self.request.method
 
