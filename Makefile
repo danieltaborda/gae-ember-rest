@@ -7,6 +7,6 @@ deps:
 
 clean:
 	@$(MAKE) clean -sC test/
-	@rm -rf build dist gae_ember_rest.egg-info $(shell find -name '*.pyc')
+	@rm -rf build dist gae_ember_rest.egg-info $(shell find . -name '*.pyc')
 
 .PHONY: clean publish deps test
