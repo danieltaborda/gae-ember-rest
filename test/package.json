@@ -1,0 +1,7 @@
+{
+  "name": "test",
+  "dependencies": {
+    "component-hooks": "0.2.5"
+  },
+  "private": true
+}

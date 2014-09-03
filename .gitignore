@@ -4,3 +4,7 @@
 dist
 gae_ember_rest.egg-info
 test/lib
+public
+node_modules
+components
+test/client/

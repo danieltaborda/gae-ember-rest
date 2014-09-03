@@ -1,21 +1,8 @@
 <html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="/public/public.css">
+  </head>
   <body>
-    <script type="text/javascript">
-      var Fetch = function(path){
-        this.path = path;
-        var req = new XMLHttpRequest();
-        req.open('GET', '/' + path, true);
-        req.onreadystatechange = this.onreadystatechange.bind(this);
-        req.send(null);
-      }
-      Fetch.prototype.onreadystatechange = function(e) {
-        if (e.target.readyState != 4) return;
-        var items = JSON.parse(e.target.response)[this.path];
-        console.log(items);
-      };
-      ['users', 'posts', 'tags', 'comments'].forEach(function(path){
-        new Fetch(path);
-      });
-    </script>
+    <script src="/public/public.js"></script>
   </body>
 </html>

@@ -6,13 +6,14 @@ Install
 
 Example
 ---
-    $ make deps example
-    $ curl http://localhost:8000/users
-    $ curl http://localhost:8000/posts
-    $ curl http://localhost:8000/tags
-    $ curl http://localhost:8000/comments
+    $ make deps
+    $ cd test
+    $ make run
+    $ open http://localhost:5000
 
 Test
 ---
 
-    $ make deps test
+    $ make deps
+    $ cd test
+    $ make

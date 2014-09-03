@@ -1,0 +1,27 @@
+{
+  "name": "test",
+  "main": "client/app.js",
+  "dependencies": {
+    "kelonye/flat.css": "0.0.5"
+  },
+  "local": [
+    "gae-ember-rest"
+  ],
+  "scripts": [
+    "client/app.js"
+  ],
+  "styles": [
+    "client/app.css"
+  ],
+  "jade": [
+    "client/templates/application",
+    "client/templates/posts",
+    "client/templates/comments",
+    "client/templates/tags",
+    "client/templates/users"
+  ],
+  "paths": [
+    "../../",
+    "."
+  ]
+}

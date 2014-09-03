@@ -9,12 +9,18 @@ from webapp2_extras import sessions
 from google.appengine.ext.webapp import template
 
 import apis
+import seeds
 
 sessions.default_config['secret_key'] = 'dev'
 
 class IndexView(webapp.RequestHandler):
 
     def get(self):
+
+        s = seeds.Seeder()
+        s.clean()
+        s.seed()
+
         template_values = {}
         path = os.path.join(
             os.path.dirname(__file__), 'template.html'
